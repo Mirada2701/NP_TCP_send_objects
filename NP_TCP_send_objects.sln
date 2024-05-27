@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync_client", "sync_client\sync_client.csproj", "{DAC61549-47C2-4420-8E9A-BE2281544724}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync_server", "sync_server\sync_server.csproj", "{EEEA5EC9-62E5-4412-B27D-A41EED4782DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAC61549-47C2-4420-8E9A-BE2281544724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAC61549-47C2-4420-8E9A-BE2281544724}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAC61549-47C2-4420-8E9A-BE2281544724}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAC61549-47C2-4420-8E9A-BE2281544724}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEEA5EC9-62E5-4412-B27D-A41EED4782DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEEA5EC9-62E5-4412-B27D-A41EED4782DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEEA5EC9-62E5-4412-B27D-A41EED4782DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEEA5EC9-62E5-4412-B27D-A41EED4782DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {44FC90E2-FE14-4661-A35E-53560D22A698}
+	EndGlobalSection
+EndGlobal
