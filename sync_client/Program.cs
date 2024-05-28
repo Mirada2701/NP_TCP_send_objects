@@ -1,5 +1,8 @@
 ﻿using System.Net.Sockets;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
+using SharedData;
+
 
 namespace sync_client
 {
@@ -11,59 +14,40 @@ namespace sync_client
         static void Main(string[] args)
         {
             IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(address), port);
-
-            //Socket socket = null;
-            //socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+   
             TcpClient client = new TcpClient();
 
             // подключаемся к удаленному хосту
-            //socket.Connect(ipPoint);
             client.Connect(ipPoint);
-
-            string message = "";
             try
             {
-                while (message != "end")
+                while (true)
                 {
-                    Console.Write("Enter a message:");
-                    message = Console.ReadLine();
+                    Request request = new Request();
+                    Console.Write("Enter A:");
+                    request.A = double.Parse(Console.ReadLine()!);
+                    Console.Write("Enter B:");
+                    request.B = double.Parse(Console.ReadLine()!);
+                    Console.Write("Enter Operation [1-4]:");
+                    request.Operation = (OperationType)Enum.Parse(typeof(OperationType),Console.ReadLine()!);
 
                     NetworkStream ns = client.GetStream();
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(ns, request);
 
-                    // ns.Write() - send data
-                    // ns.Read()  - receive data
-
-                    //byte[] data = Encoding.Unicode.GetBytes(message);
-                    //socket.Send(data);
 
                     StreamWriter sw = new StreamWriter(ns);
-                    sw.WriteLine(message);
+                    //sw.WriteLine(message);
 
 
                     sw.Flush(); // send all buffered data and clear the buffer
 
-                    // получаем ответ
-                    //data = new byte[256]; // буфер для ответа
-                    //StringBuilder builder = new StringBuilder();
-                    //int bytes = 0; // количество полученных байт
-
-                    //do
-                    //{
-                    //    bytes = socket.Receive(data, data.Length, 0);
-                    //    builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    //}
-                    //while (socket.Available > 0);
-                    //string response = builder.ToString();
 
                     StreamReader sr = new StreamReader(ns);
                     string response = sr.ReadLine();
 
                     Console.WriteLine("server response: " + response);
 
-                    // закриваємо потокі
-                    //sw.Close();
-                    //sr.Close();
-                    //ns.Close();
                 }
             }
             catch (Exception ex)
@@ -72,10 +56,6 @@ namespace sync_client
             }
             finally
             {
-                // закрываем сокет
-                //socket.Shutdown(SocketShutdown.Both);
-                //socket.Disconnect(true);
-                //socket.Close();
                 client.Close();
             }
         }

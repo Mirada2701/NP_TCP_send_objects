@@ -1,5 +1,8 @@
 ﻿using System.Net.Sockets;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
+using SharedData;
+
 
 namespace sync_server
 {
@@ -9,72 +12,41 @@ namespace sync_server
         static void Main(string[] args)
         {
             // получаем адреса для запуска сокета
-            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");//Dns.GetHostEntry("localhost").AddressList[1]; //localhost
+            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint ipPoint = new IPEndPoint(iPAddress, port);
 
-            // создаем сокет
-            //Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             TcpListener listener = new TcpListener(ipPoint); // bind
 
             try
             {
                 // связываем сокет с локальной точкой, по которой будем принимать данные
-                //listenSocket.Bind(ipPoint);
-
-                // начинаем прослушивание
-                //listenSocket.Listen(10);
                 listener.Start(10);
 
                 Console.WriteLine("Server started! Waiting for connection...");
-                //Socket handler = listenSocket.Accept();
                 TcpClient client = listener.AcceptTcpClient();
 
                 while (client.Connected)
                 {
-                    // handler.Receive(); - get data from client
-                    // handler.Send();    - sent data to client
-
                     NetworkStream ns = client.GetStream();
+                    BinaryFormatter bf = new BinaryFormatter();
+                    InfoFile request = (InfoFile)bf.Deserialize(ns);
 
-                    // ns.Write() - send data to client
-                    // ns.Read()  - receive data from client
+                   
+                    Console.WriteLine($"{client.Client.RemoteEndPoint} \n " +
+                        $"Filename = {request.FileName} . Extension = {request.Extension} at {DateTime.Now.ToShortTimeString()}");
 
-                    // получаем сообщение
-                    //StringBuilder builder = new StringBuilder();
-                    //int bytes = 0; // количество полученных байтов
-                    //byte[] data = new byte[256]; // буфер для получаемых данных
+                    string dir = @"C:\\Users\\M I R A D A\\Downloads";
+                   //string fullname = request.FileName + request.Extension;
+                    string path = Path.Combine(dir,request.FileName);
+                    File.WriteAllBytes(path,request.Data);
 
-                    //do
-                    //{
-                    //    bytes = handler.Receive(data);
-                    //    builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    //}
-                    //while (handler.Available > 0);
-
-                    StreamReader sr = new StreamReader(ns);
-                    string response = sr.ReadLine();
-
-                    //Console.WriteLine($"{handler.RemoteEndPoint} - {builder.ToString()} at {DateTime.Now.ToShortTimeString()}");
-                    Console.WriteLine($"{client.Client.RemoteEndPoint} - {response} at {DateTime.Now.ToShortTimeString()}");
-
-                    // отправляем ответ
-                    string message = "Message was send!";
-                    //data = Encoding.Unicode.GetBytes(message);
-                    //handler.Send(data);
-
+                    
+                    string message = $"Successfully saved";
                     StreamWriter sw = new StreamWriter(ns);
                     sw.WriteLine(message);
-
                     sw.Flush();
 
-                    // закриваємо потокі
-                    //sr.Close();
-                    //sw.Close();
-                    //ns.Close();
                 }
-                // закрываем сокет
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
                 client.Close();
             }
             catch (Exception ex)
